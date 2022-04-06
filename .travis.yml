@@ -37,12 +37,17 @@ jobs:
       env: TESTENV=pylint
     - python: 3.8
       env: TESTENV=pylint
+    - python: nightly
+      env: TESTENV=doc
+    - python: 3.8
+      env: TESTENV=doc
 
 before_install:
     - python -m pip install poetry
 
 # command to install dependencies
 install:
+    - if [[ "$TESTENV" == "pylint" ]] && [[ "$TRAVIS_PYTHON_VERSION" = "nightly" ]]; then poetry add --dev pylint@latest; fi
     - poetry install
 
 # command to run tests
