@@ -33,14 +33,15 @@ env:
 
 jobs:
     exclude:
-    - python: nightly
-      env: TESTENV=pylint
     - python: 3.8
       env: TESTENV=pylint
     - python: nightly
       env: TESTENV=doc
     - python: 3.8
       env: TESTENV=doc
+    allow_failures:
+    - python: nightly
+      env: TESTENV=pylint
 
 before_install:
     - python -m pip install poetry
