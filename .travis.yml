@@ -25,6 +25,8 @@ python:
 env:
     - TESTENV=code
     - TESTENV=pylint
+    - TESTENV=black
+    - TESTENV=doc
 
 jobs:
     exclude:
@@ -35,9 +37,11 @@ jobs:
 
 # command to install dependencies
 install:
-    - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
+    - python -M pip install .
 
 # command to run tests
 script:
     - if [[ "$TESTENV" == "code" ]]; then pytest ensembl_genes_api; fi
-    - if [[ "$TESTENV" == "pylint" ]]; then pylint --rcfile pylintrc ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "pylint" ]]; then pylint ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "black" ]]; then black --check ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "doc" ]]; then make html; fi
