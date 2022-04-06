@@ -37,7 +37,7 @@ jobs:
 
 # command to install dependencies
 install:
-    - python -M pip install .
+    - python -m pip install .
 
 # command to run tests
 script:
