@@ -79,7 +79,7 @@ def test_get_start_phase(example_exon_forward: Exon):
     Args:
         example_exon_forward: an Exon object
     """
-    assert example_exon_forward.exon_start_phase == None
+    assert example_exon_forward.exon_start_phase is None
 
 
 def test_get_end_phase(example_exon_forward: Exon):
@@ -88,7 +88,7 @@ def test_get_end_phase(example_exon_forward: Exon):
     Args:
         example_exon_forward: an Exon object
     """
-    assert example_exon_forward.exon_end_phase == None
+    assert example_exon_forward.exon_end_phase is None
 
 
 def test_get_id(example_exon_forward: Exon):
