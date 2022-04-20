@@ -2,7 +2,7 @@
 name = "ensembl-genes-api"
 version = "0.1.0"
 description = "Library to manipulate Ensembl genes and objects"
-authors = ["Ensembl <dev@enesmbl.org>"]
+authors = ["Ensembl <dev@ensembl.org>"]
 maintainers = [
   "Thibaut Hourlier <thibaut@ebi.ac.uk>",
   "Denye Ogeh <do1@ebi.ac.uk>"
