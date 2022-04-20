@@ -57,9 +57,12 @@ install:
     - if [[ "$TESTENV" == "pylint" ]] && [[ "$TRAVIS_PYTHON_VERSION" = "nightly" ]]; then poetry add --dev pylint@latest; fi
     - poetry install
 
+before_script:
+    - if [[ "$TESTENV" == "doc" ]]; then mkdir -p docs; fi
+
 # command to run tests
 script:
     - if [[ "$TESTENV" == "code" ]]; then PYTHONPATH=$PWD/ensembl_genes_api:$PYTHONPATH poetry run pytest ensembl_genes_api; fi
     - if [[ "$TESTENV" == "pylint" ]]; then poetry run pylint --disable=fixme ensembl_genes_api; fi
     - if [[ "$TESTENV" == "black" ]]; then poetry run black --check ensembl_genes_api; fi
-    - if [[ "$TESTENV" == "doc" ]]; then poetry run sphinx-build -c $PWD $PWD; fi
+    - if [[ "$TESTENV" == "doc" ]]; then poetry run sphinx-build -c $PWD $PWD $PWD/docs; fi
