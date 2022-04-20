@@ -56,4 +56,4 @@ script:
     - if [[ "$TESTENV" == "code" ]]; then PYTHONPATH=$PWD/ensembl_genes_api:$PYTHONPATH poetry run pytest ensembl_genes_api; fi
     - if [[ "$TESTENV" == "pylint" ]]; then poetry run pylint ensembl_genes_api; fi
     - if [[ "$TESTENV" == "black" ]]; then poetry run black --check ensembl_genes_api; fi
-    - if [[ "$TESTENV" == "doc" ]]; then poetry run make html; fi
+    - if [[ "$TESTENV" == "doc" ]]; then poetry run sphinx-build -c $PWD $PWD; fi
