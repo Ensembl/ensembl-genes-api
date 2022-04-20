@@ -22,6 +22,12 @@ python:
     - 3.8
     - nightly
 
+addons:
+  apt:
+    packages:
+    - bedtools
+    - samtools
+
 env:
   global:
     - POETRY_VIRTUALENVS_IN_PROJECT="true"
