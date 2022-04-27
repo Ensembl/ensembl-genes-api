@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "ensembl-genes-api"
+version = "0.1.0"
+description = "Library to manipulate Ensembl genes and objects"
+authors = ["Ensembl <dev@ensembl.org>"]
+maintainers = [
+  "Thibaut Hourlier <thibaut@ebi.ac.uk>",
+  "Denye Ogeh <do1@ebi.ac.uk>"
+]
+license = "Apache 2.0"
+readme = "README.md"
+homepage = "www.ensembl.org"
+repository = "https://github.com/Ensembl/ensembl-genes-api"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.1"
+pylint = "2.7.4"
+Sphinx = "^4.5.0"
+black = "^22.3.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

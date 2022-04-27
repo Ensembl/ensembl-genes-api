@@ -22,22 +22,47 @@ python:
     - 3.8
     - nightly
 
+addons:
+  apt:
+    packages:
+    - bedtools
+    - samtools
+
 env:
+  global:
+    - POETRY_VIRTUALENVS_IN_PROJECT="true"
+  jobs:
     - TESTENV=code
     - TESTENV=pylint
+    - TESTENV=black
+    - TESTENV=doc
 
 jobs:
     exclude:
-    - python: nightly
-      env: TESTENV=pylint
     - python: 3.8
       env: TESTENV=pylint
+    - python: nightly
+      env: TESTENV=doc
+    - python: 3.8
+      env: TESTENV=doc
+    allow_failures:
+    - python: nightly
+      env: TESTENV=pylint
+
+before_install:
+    - python -m pip install poetry
 
 # command to install dependencies
 install:
-    - if [[ "$TESTENV" == "pylint" ]]; then pip install pylint;fi
+    - if [[ "$TESTENV" == "pylint" ]] && [[ "$TRAVIS_PYTHON_VERSION" = "nightly" ]]; then poetry add --dev pylint@latest; fi
+    - poetry install
+
+before_script:
+    - if [[ "$TESTENV" == "doc" ]]; then mkdir -p docs; fi
 
 # command to run tests
 script:
-    - if [[ "$TESTENV" == "code" ]]; then pytest ensembl_genes_api; fi
-    - if [[ "$TESTENV" == "pylint" ]]; then pylint --rcfile pylintrc ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "code" ]]; then PYTHONPATH=$PWD/ensembl_genes_api:$PYTHONPATH poetry run pytest ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "pylint" ]]; then poetry run pylint --disable=fixme ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "black" ]]; then poetry run black --check ensembl_genes_api; fi
+    - if [[ "$TESTENV" == "doc" ]]; then poetry run sphinx-build -c $PWD $PWD $PWD/docs; fi
