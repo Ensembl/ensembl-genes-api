@@ -17,14 +17,12 @@ from sequence import Sequence
 
 class Intron:
 
-    internal_identifier = 1
     canonical_splice_sites = ["GTAG", "ATAC", "GCAG"]
 
     def __init__(
         self,
         exons,
         fasta_file=None,
-        internal_identifier=None,
         public_identifier=None,
         exon_start_phase=None,
         exon_end_phase=None,
@@ -32,11 +30,6 @@ class Intron:
         self.build_intron(exons)
         self.fasta_file = fasta_file
         self.sequence = None
-        if internal_identifier is not None:
-            self.internal_identifier = internal_identifier
-        else:
-            self.internal_identifier = Intron.internal_identifier
-            Intron.internal_identifier += 1
         self.public_identifier = public_identifier
 
     def build_intron(self, exons):
