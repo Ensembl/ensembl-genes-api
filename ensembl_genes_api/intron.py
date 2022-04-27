@@ -29,18 +29,18 @@ class Intron:
 
     def __init__(
         self,
-        exons,
-        fasta_file=None,
-        public_identifier=None,
-        exon_start_phase=None,
-        exon_end_phase=None,
-    ):
+        exons: list,
+        fasta_file: str = None,
+        public_identifier: str = None,
+        exon_start_phase: int = None,
+        exon_end_phase: int = None,
+    ) -> None:
         self.build_intron(exons)
         self.fasta_file = fasta_file
         self.sequence = None
         self.public_identifier = public_identifier
 
-    def build_intron(self, exons):
+    def build_intron(self, exons: list) -> None:
         if exons[0].start > exons[1].start:
             exons.sort(key=lambda x: x.start)
             print("Left exon start coord > right exon start coord, will swap")
@@ -56,7 +56,7 @@ class Intron:
         if hasattr(exon_left, "fasta_file"):
             self.fasta_file = exon_left.fasta_file
 
-    def get_sequence(self):
+    def get_sequence(self) -> str:
         if self.sequence is None:
             sequence = Sequence(
                 self.start, self.end, self.strand, self.location_name, self.fasta_file
@@ -69,7 +69,7 @@ class Intron:
             sequence_string = sequence.get_sequence()
             return sequence_string
 
-    def is_splice_canonical(self):
+    def is_splice_canonical(self) -> bool:
         sequence = self.get_sequence()
         donor = sequence[:2]
         acceptor = sequence[-2:]
@@ -79,7 +79,7 @@ class Intron:
         else:
             return False
 
-    def intron_string(self, verbose=None):
+    def intron_string(self, verbose: bool = False) -> str:
         start = self.start
         end = self.end
         if self.strand == "-":
