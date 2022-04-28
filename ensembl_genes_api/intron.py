@@ -16,7 +16,9 @@ limitations under the License.
 Representation of an exon.
 
 Examples:
-    intron = Intron(1, 10, "+", "X")
+    exon1 = Exon(1, 10, "+", "X")
+    exon2 = Exon(136, 150, "+", "X")
+    intron = Intron([exon1, exon2])
     intron.getSequence()
 """
 
@@ -24,7 +26,28 @@ from sequence import Sequence
 
 
 class Intron:
+    """Representation of an intron.
 
+    The location of an intron is always provided 5' -> 3' relative to the cDNA.
+    Thus the start should be greater than the end if the transcript is on the
+    reverse strand.
+
+    Attributes:
+      start: Start position of the intron.
+      end: End position of the intron.
+      strand: Strand of the intron, either + or -.
+      location_name: Name of the region the intron is on.
+      fasta_file: Path to a FASTA file containing the DNA of the region.
+      sequence: DNA sequence of the intron.
+      public_identifier: Name of the intron.
+      exons: The exons on each side of the introns
+      canonical_splice_sites: list of canonical splice site, i.e, GTAG,...
+
+    Raises:
+      Exception: when exons size is different from 2
+    """
+
+    # pylint: disable=too-many-instance-attributes
     canonical_splice_sites = ["GTAG", "ATAC", "GCAG"]
     fasta_file = None
 
@@ -34,6 +57,16 @@ class Intron:
         fasta_file: str = None,
         public_identifier: str = None,
     ) -> None:
+        """Initialise intron
+
+        Args:
+          exons: The exons on each side of the introns
+          fasta_file: Path to a FASTA file containing the DNA of the region.
+          public_identifier: Name of the intron.
+
+        Raises:
+          Exception: when exons size is different from 2
+        """
         if len(exons) != 2:
             raise Exception(f"exons should only have 2 elements, not {len(exons)}")
         self.build_intron(exons)
@@ -43,6 +76,11 @@ class Intron:
         self.public_identifier = public_identifier
 
     def build_intron(self, exons: list) -> None:
+        """Populate the intron attributes using the exons provided.
+
+        Args:
+          exons: Two exons delimiting the intron.
+        """
         if exons[0].start > exons[1].start:
             exons.sort(key=lambda x: x.start)
             print("Left exon start coord > right exon start coord, will swap")
@@ -59,6 +97,11 @@ class Intron:
             self.fasta_file = exon_left.fasta_file
 
     def get_sequence(self) -> str:
+        """The DNA sequence of the intron from the FASTA file attached.
+
+        Returns:
+          The DNA sequence.
+        """
         if self.sequence is None:
             sequence = Sequence(
                 self.start, self.end, self.strand, self.location_name, self.fasta_file
@@ -71,16 +114,39 @@ class Intron:
         return self.sequence.sequence
 
     def is_splice_canonical(self) -> bool:
+        """Assert the splice junction is canonical
+
+            The canonical splice junction are the most common two amino acids at the beginning
+            and at the end of the intron. Non canonical splice junctions occur but usually
+            means that either there is an error in the assembly or there is a misalignment.
+
+        Returns:
+          True if the two first amino acids and the two last amino acids concatenated matches
+          one of:
+            * GTAG
+            * ATAC
+            * CGAG
+          False in any other cases
+        """
         sequence = self.get_sequence()
         donor = sequence[:2]
         acceptor = sequence[-2:]
         splice_site = donor + acceptor
-        if splice_site in Intron.canonical_splice_sites:
-            return True
-        else:
-            return False
+        return bool(splice_site in Intron.canonical_splice_sites)
 
     def intron_string(self, verbose: bool = False) -> str:
+        """Unique intron identifier based on its location.
+
+        Args:
+          verbose: add the strand and region name to the returned string.
+
+        Returns:
+          The unique identifier as (start..end) based on its direction:
+          <1..10> if it is on the forward strand (+)
+          <10..1> if it is on the reverse strand (-)
+
+          When verbose is set the format is <1..10>:1:X
+        """
         start = self.start
         end = self.end
         if self.strand == "-":
