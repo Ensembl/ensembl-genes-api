@@ -85,9 +85,9 @@ class Intron:
             start = self.end
             end = self.start
 
-        intron_string = "<" + str(start) + ".." + str(end) + ">"
+        intron_string = f"<{str(start)}..{str(end)}>"
 
         if verbose:
-            intron_string = intron_string + ":" + self.strand + ":" + self.location_name
+            intron_string = f"{intron_string}:{self.strand}:{self.location_name}"
 
         return intron_string
