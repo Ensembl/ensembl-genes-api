@@ -63,11 +63,10 @@ class Intron:
             )
             self.sequence = sequence
 
-        if self.sequence.sequence is not None:
-            return self.sequence.sequence
-        else:
-            sequence_string = sequence.get_sequence()
-            return sequence_string
+        if self.sequence.sequence is None:
+            sequence.get_sequence()
+
+        return self.sequence.sequence
 
     def is_splice_canonical(self) -> bool:
         sequence = self.get_sequence()
