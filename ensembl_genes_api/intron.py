@@ -26,6 +26,7 @@ from sequence import Sequence
 class Intron:
 
     canonical_splice_sites = ["GTAG", "ATAC", "GCAG"]
+    fasta_file = None
 
     def __init__(
         self,
@@ -34,7 +35,8 @@ class Intron:
         public_identifier: str = None,
     ) -> None:
         self.build_intron(exons)
-        self.fasta_file = fasta_file
+        if fasta_file is not None:
+            self.fasta_file = fasta_file
         self.sequence = None
         self.public_identifier = public_identifier
 
