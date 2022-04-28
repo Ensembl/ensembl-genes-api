@@ -32,8 +32,6 @@ class Intron:
         exons: list,
         fasta_file: str = None,
         public_identifier: str = None,
-        exon_start_phase: int = None,
-        exon_end_phase: int = None,
     ) -> None:
         self.build_intron(exons)
         self.fasta_file = fasta_file
