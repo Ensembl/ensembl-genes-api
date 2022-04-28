@@ -216,7 +216,7 @@ def test_get_sequence(example_exon_forward: Exon):
     Args:
         example_exon_forward: an Exon object
     """
-    assert example_exon_forward.get_sequence() == "ATGATATCGTATCATGATCGTBTCGTTCGA"
+    assert example_exon_forward.get_sequence() == "ATGATATCGTATCATGATCGTGTCGTTCGA"
 
 
 def test_exon_string_forward_mod(example_exon_forward: Exon):
@@ -236,7 +236,7 @@ def test_get_sequence_mod(example_exon_forward: Exon):
         example_exon_forward: an Exon object
     """
     example_exon_forward.start = 4
-    assert example_exon_forward.get_sequence() == "ATATCGTATCATGATCGTBTCGTTCGA"
+    assert example_exon_forward.get_sequence() == "ATATCGTATCATGATCGTGTCGTTCGA"
 
 
 def test_exon_string_reverse(example_exon_reverse: Exon):
@@ -265,7 +265,7 @@ def test_get_sequence_reverse(example_exon_reverse: Exon):
     Args:
         example_exon_reverse: an Exon object
     """
-    assert example_exon_reverse.get_sequence() == "TCGAACGABACGATCATGATACGATATCAT"
+    assert example_exon_reverse.get_sequence() == "TCGAACGACACGATCATGATACGATATCAT"
 
 
 def test_fail_start_gt_end():
