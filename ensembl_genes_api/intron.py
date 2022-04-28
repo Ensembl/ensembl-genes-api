@@ -34,6 +34,8 @@ class Intron:
         fasta_file: str = None,
         public_identifier: str = None,
     ) -> None:
+        if len(exons) != 2:
+            raise Exception(f"exons should only have 2 elements, not {len(exons)}")
         self.build_intron(exons)
         if fasta_file is not None:
             self.fasta_file = fasta_file
