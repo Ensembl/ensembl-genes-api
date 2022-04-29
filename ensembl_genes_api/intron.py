@@ -1,19 +1,20 @@
-"""See the NOTICE file distributed with this work for additional information
-regarding copyright ownership.
+# See the NOTICE file distributed with this work for additional information
+# regarding copyright ownership.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-Representation of an exon.
+"""
+Representation of an intron.
 
 Examples:
     exon1 = Exon(1, 10, "+", "X")
@@ -103,13 +104,12 @@ class Intron:
           The DNA sequence.
         """
         if self.sequence is None:
-            sequence = Sequence(
+            self.sequence = Sequence(
                 self.start, self.end, self.strand, self.location_name, self.fasta_file
             )
-            self.sequence = sequence
 
         if self.sequence.sequence is None:
-            sequence.get_sequence()
+            self.sequence.get_sequence()
 
         return self.sequence.sequence
 
