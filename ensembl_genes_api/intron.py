@@ -129,6 +129,8 @@ class Intron:
           False in any other cases
         """
         sequence = self.get_sequence()
+        if sequence is None:
+            return False
         donor = sequence[:2]
         acceptor = sequence[-2:]
         splice_site = donor + acceptor
