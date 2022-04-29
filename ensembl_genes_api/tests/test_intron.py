@@ -263,7 +263,9 @@ def test_get_sequence_reverse(example_intron_reverse: Intron):
     )
 
 
-def test_is_splice_canonical_reverse(example_intron_reverse: Intron):
+def test_is_splice_canonical_reverse(
+    example_intron_reverse: Intron,
+):  # pylint: disable=invalid-name
     """Test :func: is_splice_canonical() returns True on a canonical splice site from reverse
 
     Args:
