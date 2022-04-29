@@ -20,7 +20,7 @@ Examples:
     exon1 = Exon(1, 10, "+", "X")
     exon2 = Exon(136, 150, "+", "X")
     intron = Intron([exon1, exon2])
-    intron.getSequence()
+    intron.get_sequence()
 """
 
 from sequence import Sequence
