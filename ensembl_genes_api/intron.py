@@ -116,9 +116,9 @@ class Intron:
     def is_splice_canonical(self) -> bool:
         """Assert the splice junction is canonical
 
-            The canonical splice junction are the most common two amino acids at the beginning
-            and at the end of the intron. Non canonical splice junctions occur but usually
-            means that either there is an error in the assembly or there is a misalignment.
+        The canonical splice junction are the most common two amino acids at the beginning
+        and at the end of the intron. Non canonical splice junctions occur but usually
+        means that either there is an error in the assembly or there is a misalignment.
 
         Returns:
           True if the two first amino acids and the two last amino acids concatenated matches
