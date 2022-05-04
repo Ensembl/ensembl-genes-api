@@ -13,6 +13,11 @@
 # limitations under the License.
 
 
+"""
+Tests for the intron module.
+"""
+
+
 import pytest
 
 from exon import Exon
