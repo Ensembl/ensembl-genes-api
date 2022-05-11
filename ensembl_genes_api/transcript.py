@@ -25,17 +25,15 @@ from intron import Intron
 
 class Transcript:
 
-    internal_identifier = 1
     translate_path = "translate"
 
     def __init__(
         self,
-        exons,
-        fasta_file=None,
-        internal_identifier=None,
-        public_identifier=None,
-        translate_path=None,
-    ):
+        exons: list,
+        fasta_file: str = None,
+        public_identifier: str = None,
+        translate_path: str = None,
+    ) -> None:
 
         self.exons = exons
         self.build_transcript(exons)
@@ -46,14 +44,9 @@ class Transcript:
         self.translation_sequence = None
         self.translations = []
         self.fasta_file = fasta_file
-        if internal_identifier is not None:
-            self.internal_identifier = internal_identifier
-        else:
-            self.internal_identifier = Transcript.internal_identifier
-            Transcript.internal_identifier += 1
         self.public_identifier = public_identifier
 
-    def build_transcript(self, exons):
+    def build_transcript(self, exons: list) -> None:
         # Check the integrity of the exons
         strand = exons[0].strand
         location_name = exons[0].location_name
@@ -94,14 +87,14 @@ class Transcript:
         self.strand = strand
         self.location_name = location_name
 
-    def add_exons(self, exons):
+    def add_exons(self, exons: list) -> None:
         # Add a list of exons onto the existing set of exons. Rebuild transcript and
         # set any sequence to None, since that will need to be re-calculated
         self.exons = self.exons + exons
         self.build_transcript(self.exons)
         self.sequence = None
 
-    def get_sequence(self):
+    def get_sequence(self) -> str:
         if self.sequence is None:
             sequence = ""
             for exon in self.exons:
@@ -110,7 +103,7 @@ class Transcript:
 
         return self.sequence
 
-    def get_cds_sequence(self):
+    def get_cds_sequence(self) -> str:
         if (
             self.cds_sequence is None
             and self.cds_genomic_start is not None
@@ -122,7 +115,7 @@ class Transcript:
 
         return self.cds_sequence
 
-    def get_translation_sequence(self):
+    def get_translation_sequence(self) -> str:
         #    if self.translation_sequence is None and self.cds_genomic_start is not None and self.cds_genomic_end is not None:
         #      self.construct_translation(self.cds_genomic_start, self.cds_genomic_end, self.strand, self.exons)
 
@@ -132,7 +125,9 @@ class Transcript:
 
         return self.translation_sequence
 
-    def construct_cds(self, genomic_start, genomic_end, strand, exons):
+    def construct_cds(
+        self, genomic_start: int, genomic_end: int, strand: str, exons: list
+    ) -> None:
         # Make a copy of the exons, based on start, then loop over the range of exons that
         # the cds start and end cover. Then edit the boundaries of the start and end exons
         # At the moment I've just made a temp transcript with the cds exons and directly
@@ -173,11 +168,11 @@ class Transcript:
 
         self.cds_sequence = cds_sequence
 
-    def construct_translation(self, cds_sequence):
+    def construct_translation(self, cds_sequence: str) -> str:
         # Just does a direct translation of a cds sequence that has already been calculated
         self.translation_sequence = Transcript.local_translate(cds_sequence)
 
-    def compute_translation(self):
+    def compute_translation(self) -> str:
         # First remove any existing cds/translation info
         self.cds_sequence = None
         self.cds_genomic_start = None
@@ -241,7 +236,9 @@ class Transcript:
     #      self.translation_sequence = primary_translation[3]
 
     @staticmethod
-    def run_translate(sequence, require_methonine=None, min_length=None):
+    def run_translate(
+        sequence, require_methonine: int = None, min_length: int = None
+    ) -> list:
 
         if require_methonine is None:
             require_methonine = 1
@@ -308,7 +305,7 @@ class Transcript:
         return translations
 
     @staticmethod
-    def get_feature_index(genomic_position, features):
+    def get_feature_index(genomic_position: int, features: list) -> int:
         for idx, feature in enumerate(features):
             if genomic_position >= feature.start and genomic_position <= feature.end:
                 return idx
@@ -316,8 +313,11 @@ class Transcript:
 
     @staticmethod
     def sequence_to_genomic_coord(
-        sequence_position, features, feature_start_offset=None, feature_end_offset=None
-    ):
+        sequence_position: int,
+        features: list,
+        feature_start_offset: int = None,
+        feature_end_offset: int = None,
+    ) -> int:
         # This loops through a set features with an associated sequence to place a pair of sequence coords onto the genome
         # A couple of straightforward use cases are converting protein and transcript coords to genomic coords
         # Since the sequence might not cover all features, a feature start and end offset can be provided
@@ -337,7 +337,7 @@ class Transcript:
         return None
 
     @staticmethod
-    def local_translate(sequence):
+    def local_translate(sequence: str) -> str:
         translation_table = {
             "ATA": "I",
             "ATC": "I",
@@ -418,7 +418,7 @@ class Transcript:
 
         return translation
 
-    def transcript_string(self, verbose=None):
+    def transcript_string(self) -> str:
         transcript_string = (
             "transcript; location='"
             + self.location_name
