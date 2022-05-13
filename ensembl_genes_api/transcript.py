@@ -51,7 +51,6 @@ class Transcript:
       cds_genomic_end: Genomic end position of the CDS, always be greater than cds_genomic_start.
       cds_sequence: Translateable cDNA sequence.
       translation_sequence: Protein sequence translated from cds_sequence.
-      translations: List of translations the transcript can be translated to.
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -77,7 +76,6 @@ class Transcript:
         self.cds_genomic_end = None
         self.cds_sequence = None
         self.translation_sequence = None
-        self.translations = []
         self.fasta_file = fasta_file
         self.public_identifier = public_identifier
 
