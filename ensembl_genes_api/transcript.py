@@ -316,8 +316,8 @@ class Transcript:
         """Run the translate software to find all possible ORFs.
 
         Args:
-          require_methonine: Set to True if all possible ORFs need to start with a methionine.
-          min_length: Minimum length of an ORF to be reported.
+          require_methionine: Set to True if all possible ORFs need to start with a methionine.
+          min_length: Minimum length of an ORF to be reported, set to 0 to disable.
 
         Returns:
           A list of a list of three elements:
@@ -326,9 +326,6 @@ class Transcript:
           - lenght
           - sequence
         """
-        if min_length is None:
-            min_length = 50
-
         translations = []
         translate_path = Transcript.translate_path
         with tempfile.NamedTemporaryFile(
@@ -338,10 +335,10 @@ class Transcript:
             sequence_temp_file.close()
 
             translate_command = [translate_path]
-            if require_methonine:
+            if require_methionine:
                 translate_command.append("-m")
 
-            if min_length:
+            if min_length > 1:
                 translate_command.append("-l")
                 translate_command.append(str(min_length))
 
