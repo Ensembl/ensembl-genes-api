@@ -70,14 +70,39 @@ class Transcript:
           public_identifier: Name of the transcript.
         """
         self.exons = exons
+        self.fasta_file = fasta_file
         self.build_transcript(exons)
         self.sequence = None
         self.cds_genomic_start = None
         self.cds_genomic_end = None
         self.cds_sequence = None
         self.translation_sequence = None
-        self.fasta_file = fasta_file
         self.public_identifier = public_identifier
+
+    @property
+    def start(self) -> int:
+        """Get :attr: start."""
+        return self._start
+
+    @property
+    def end(self) -> int:
+        """Get :attr: end."""
+        return self._end
+
+    @property
+    def strand(self) -> str:
+        """Get :attr: strand."""
+        return self._strand
+
+    @property
+    def location_name(self) -> int:
+        """Get :attr: location_name."""
+        return self._location_name
+
+    @property
+    def introns(self) -> int:
+        """Get :attr: introns."""
+        return self._introns
 
     def build_transcript(self, exons: list) -> None:
         """Set the basic attributes of the transcript based on the exons.
@@ -108,32 +133,24 @@ class Transcript:
                     f"{exon.location_name} {location_name}"
                 )
 
-        if strand == "+":
-            exons.sort(key=lambda x: x.start)
-            self.start = exons[0].start
-            self.end = exons[-1].end
-        else:
-            exons.sort(key=lambda x: x.end, reverse=True)
-            self.start = exons[-1].start
-            self.end = exons[0].end
+        exons.sort(key=lambda x: x.start)
+        self._start = exons[0].start
+        self._end = exons[-1].end
+        if strand == "-":
+            exons.reverse()
 
-        # If we have multiple exons then calculate the introns
-        if len(exons) > 1:
-            introns = []
-            for idx, exon in enumerate(exons[:-1]):
-                intron = Intron([exon, exons[idx + 1]])
-                introns.append(intron)
-            if strand == "+":
-                introns.sort(key=lambda x: x.start)
-            else:
-                introns.sort(key=lambda x: x.end, reverse=True)
-            self.introns = introns
-
-        if self.start >= self.end:
+        if self._start >= self._end:
             raise Exception("Transcript start was >= end, this should not be")
 
-        self.strand = strand
-        self.location_name = location_name
+        # If we have multiple exons then calculate the introns
+        self._introns = []
+        if len(exons) > 1:
+            for idx, exon in enumerate(exons[:-1]):
+                intron = Intron([exon, exons[idx + 1]])
+                self._introns.append(intron)
+
+        self._strand = strand
+        self._location_name = location_name
 
     def add_exons(self, exons: list) -> None:
         """Add exon(s) to the transcript.
@@ -255,31 +272,25 @@ class Transcript:
         self.cds_genomic_start = None
         self.cds_genomic_end = None
         self.translation_sequence = None
-        translations_methonine_required = []
-        translations_methonine_optional = []
-        translations_methonine_required = Transcript.run_translate(
-            self.get_sequence(), True
-        )
-        translations_methonine_optional = Transcript.run_translate(
-            self.get_sequence(), False
-        )
+        translations_met_required = []
+        translations_met_optional = []
+        translations_met_required = Transcript.run_translate(self.get_sequence(), True)
+        translations_met_optional = Transcript.run_translate(self.get_sequence(), False)
 
         best_translation_met = None
         best_translation_no_met = None
         primary_translation = None
 
-        if len(translations_methonine_required) > 0:
-            best_translation_met = translations_methonine_required[0]
+        if len(translations_met_required) > 0:
+            best_translation_met = translations_met_required[0]
 
-        if len(translations_methonine_optional) > 0:
-            best_translation_no_met = translations_methonine_optional[0]
+        if len(translations_met_optional) > 0:
+            best_translation_no_met = translations_met_optional[0]
 
         if best_translation_met and best_translation_no_met:
-            if translations_methonine_required[0][
+            if translations_met_required[0][2] < 100 and translations_met_optional[0][
                 2
-            ] < 100 and translations_methonine_optional[0][2] > (
-                2 * translations_methonine_required[0][2]
-            ):
+            ] > (2 * translations_met_required[0][2]):
                 primary_translation = best_translation_no_met
             else:
                 primary_translation = best_translation_met
@@ -323,8 +334,7 @@ class Transcript:
           A list of a list of three elements:
           - start
           - end
-          - lenght
-          - sequence
+          - length
         """
         translations = []
         translate_path = Transcript.translate_path
@@ -348,19 +358,14 @@ class Transcript:
                 translate_command, stdout=subprocess.PIPE
             )
 
-            translate_output_string = ""
+            fasta_regex = re.compile(r"^>.+length (\d+),\s+nt (\d+)\.\.(\d+)")
             for line in io.TextIOWrapper(translate_output.stdout, encoding="utf-8"):
-                translate_output_string.join(line)
-
-            fasta_regex = re.compile(r"^>.+ nt (\d+)\.\.(\d+)\n(([a-zA-Z\*]+\n)+)")
-            for match in fasta_regex.finditer(translate_output_string):
-                start = int(match.group(1))
-                end = int(match.group(2))
-                translation_sequence = match.group(3)
-                if start < end:
-                    translations.append(
-                        [start, end, len(translation_sequence), translation_sequence]
-                    )
+                match = fasta_regex.search(line)
+                if match:
+                    start = int(match.group(2))
+                    end = int(match.group(3))
+                    if start < end:
+                        translations.append([start, end, int(match.group(1))])
 
             os.remove(sequence_temp_file.name)
 
