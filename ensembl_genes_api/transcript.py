@@ -14,7 +14,7 @@
 
 
 """
-Representation of an transcript.
+Representation of a transcript.
 
 Examples:
     transcript = transcript(exons)
@@ -41,7 +41,7 @@ class Transcript:
       exons: List of exons constituting the transcript.
       start: Start position of the transcript.
       end: End position of the transcript.
-      strand: Strand of the exon, either + or -.
+      strand: Strand of the transcript, either + or -.
       location_name: Name of the region the transcript is on.
       fasta_file: Path to a FASTA file containing the DNA of the region.
       sequence: DNA sequence of the transcript.
@@ -308,12 +308,12 @@ class Transcript:
                     sequence_start, self.exons
                 )
 
-            # Now store the cds and translation seqeunce
+            # Now store the cds and translation sequence
             self.get_translation_sequence()
 
     @staticmethod
     def run_translate(
-        sequence, require_methonine: bool = False, min_length: int = None
+        sequence, require_methionine: bool = False, min_length: int = 50
     ) -> list:
         """Run the translate software to find all possible ORFs.
 
