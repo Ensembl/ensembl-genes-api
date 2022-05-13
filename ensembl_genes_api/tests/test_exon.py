@@ -33,7 +33,7 @@ def example_exon_forward() -> Exon:
     Returns:
         Exon object
     """
-    return Exon(1, 30, "+", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
+    return Exon(1, 30, "+", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa")
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def example_exon_reverse() -> Exon:
     Returns:
         Exon object
     """
-    return Exon(1, 30, "-", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
+    return Exon(1, 30, "-", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa")
 
 
 def test_get_start(example_exon_forward: Exon):
@@ -116,7 +116,7 @@ def test_get_fasta_file(example_exon_forward: Exon):
     Args:
         example_exon_forward: an Exon object
     """
-    assert example_exon_forward.fasta_file == "ensembl_genes_api/tests/data_exon.fa"
+    assert example_exon_forward.fasta_file == "ensembl_genes_api/tests/data_genomic.fa"
 
 
 def test_set_start(example_exon_forward: Exon):
@@ -195,8 +195,8 @@ def test_set_fasta_file(example_exon_forward: Exon):
     Args:
         example_exon_forward: an Exon object
     """
-    example_exon_forward.fasta_file = "tests/data_exon.fa"
-    assert example_exon_forward.fasta_file == "tests/data_exon.fa"
+    example_exon_forward.fasta_file = "tests/data_genomic.fa"
+    assert example_exon_forward.fasta_file == "tests/data_genomic.fa"
 
 
 def test_exon_string_forward(example_exon_forward: Exon):
