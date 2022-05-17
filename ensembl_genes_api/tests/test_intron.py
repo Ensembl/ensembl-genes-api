@@ -34,20 +34,24 @@ def example_intron_forward() -> Intron:
     Returns:
         Intron object
     """
-    exon1 = Exon(1, 19, "+", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
-    exon2 = Exon(72, 105, "+", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
+    exon1 = Exon(1, 19, "+", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa")
+    exon2 = Exon(
+        72, 105, "+", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa"
+    )
     return Intron([exon1, exon2])
 
 
 @pytest.fixture
-def example_intron_reverse() -> Exon:
+def example_intron_reverse() -> Intron:
     """Create a simple Intron on the reverse strand for tests
 
     Returns:
         Intron object
     """
-    exon1 = Exon(154, 170, "-", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
-    exon2 = Exon(19, 70, "-", "X", fasta_file="ensembl_genes_api/tests/data_exon.fa")
+    exon1 = Exon(
+        154, 170, "-", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa"
+    )
+    exon2 = Exon(19, 70, "-", "X", fasta_file="ensembl_genes_api/tests/data_genomic.fa")
     return Intron([exon1, exon2])
 
 
@@ -103,7 +107,9 @@ def test_get_fasta_file(example_intron_forward: Intron):
     Args:
         example_intron_forward: an Exon object
     """
-    assert example_intron_forward.fasta_file == "ensembl_genes_api/tests/data_exon.fa"
+    assert (
+        example_intron_forward.fasta_file == "ensembl_genes_api/tests/data_genomic.fa"
+    )
 
 
 def test_set_start(example_intron_forward: Intron):
@@ -162,8 +168,8 @@ def test_set_fasta_file(example_intron_forward: Intron):
     Args:
         example_intron_forward: an Intron object
     """
-    example_intron_forward.fasta_file = "tests/data_exon.fa"
-    assert example_intron_forward.fasta_file == "tests/data_exon.fa"
+    example_intron_forward.fasta_file = "tests/data_genomic.fa"
+    assert example_intron_forward.fasta_file == "tests/data_genomic.fa"
 
 
 def test_intron_string_forward(example_intron_forward: Intron):
@@ -268,7 +274,7 @@ def test_get_sequence_reverse(example_intron_reverse: Intron):
     """
     assert (
         example_intron_reverse.get_sequence()
-        == "ATATATCTGTGTCATATCTGLTACATCGCGTATCTCTCTGCTCTGGCTGAGCTGGGACTTGGCTGACTGACTGGAGCTGGGAC"
+        == "ATATATCTGTGTCATATCTGTTACATCGCGTATCTCTCTGCTCTGGCTGAGCTGGGACTTGGCTGACTGACTGGAGCTGGGAC"
     )
 
 
